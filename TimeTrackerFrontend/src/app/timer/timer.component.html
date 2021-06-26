@@ -1,0 +1,18 @@
+<div id="timer-wrapper">
+  <h2>Track your time</h2>
+  <input type="text" id="description" name="description" value="" placeholder="Description"><br>
+  <section class="timer-counter-label">
+    <div *ngIf="counter">
+      <span>{{minutes}}:</span><span>{{seconds}}:</span> <span>{{milliseconds}}</span></div>
+    <div *ngIf="!counter">
+      <span>{{minutes}}:</span><span>{{seconds}}:</span> <span>{{milliseconds}}</span>
+    </div>
+  </section>
+  <div class="timer-button-container">
+    <button class="timer-button" (click)="startTimer()">
+      {{ startText }}
+    </button>
+    <button class="timer-button" (click)="clearTimer()">Clear</button>
+    <button class="timer-button" (click)="saveTimer()">Save</button>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  database:
+    image: mysql
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: time_tracker_db
+      MYSQL_USER: timetracker
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+     - dockerTimeTrackerDatabaseData:/var/lib/mysql
+    networks:
+     - backendNetwork
+     
+  springapi:
+    image: openjdk:16.0.1
+    container_name: springapi
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    volumes:
+      - ./TimeTrackerBackend/target/TimeTrackerBackend-0.0.1-SNAPSHOT.jar:/application.jar
+    command: ["java", "-jar", "application.jar"]
+    networks:
+      - backendNetwork
+      - frontendNetwork
+      
+  angular:
+    image: nginx:alpine
+    container_name: angular
+    ports: 
+      - 4200:80
+    depends_on:
+      - springapi
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./TimeTrackerFrontend/dist/TimeTrackerFrontend/:/usr/share/nginx/html
+    networks:
+      - frontendNetwork
+    
+
+volumes:
+  dockerTimeTrackerDatabaseData:
+  
+networks:
+  backendNetwork:
+  frontendNetwork:
